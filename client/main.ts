@@ -27,7 +27,7 @@ const needsServer = location.hostname.endsWith('github.io') && !configuredServer
 const socket = io(configuredServer || location.origin, { autoConnect: !needsServer, reconnection: true, reconnectionDelay: 700, reconnectionDelayMax: 3_000, timeout: 15_000 });
 
 $('#app').innerHTML = `
-  <header class="site-header"><a href="${import.meta.env.BASE_URL}" class="brand" aria-label="Blast Buddies home"><span class="brand-icon">${icons.bomb}</span><span>BLAST<span class="brand-second">BUDDIES</span><span class="brand-dot">®</span></span></a>
+  <header class="site-header"><a href="${import.meta.env.BASE_URL}" class="brand" aria-label="Blast Buddies home"><span class="brand-icon">${icons.bomb}</span><span>BLAST<span class="brand-second">BUDDIES</span><span class="brand-dot" aria-hidden="true">✦</span></span></a>
   <nav aria-label="Main navigation"><button class="text-button" data-action="rules">How to play <span>↗</span></button><button class="sound-button" data-action="sound" aria-label="${muted ? 'Enable' : 'Mute'} sound">${muted ? '♪ OFF' : '♪ ON'}</button><span class="connection"><i></i><span id="connection-label">Connecting</span></span></nav></header>
   <main>
     <section id="home-copy"><div class="eyebrow"><span class="tiny-square"></span> A LITTLE FRIENDLY DESTRUCTION</div><h1>Small bombs.<br><span>Big grudges.</span></h1><p class="intro">Your friends. One arena. Questionable alliances.<br>Drop in, blow things up, and be the last buddy standing.</p>
@@ -83,7 +83,7 @@ function leaveUI() {
   $('main').classList.remove('in-room'); $('#home-copy').hidden = false; $('#room-panel').hidden = true; $('#quick-guide').hidden = false;
   $('#touch-controls').hidden = true; $('#arena-overlay').innerHTML = ''; $('#arena-label').textContent = 'THE BACKYARD'; $('#arena-meta').textContent = 'ARENA / 01';
   $('#arena-bottom-left').innerHTML = '<span class="preview-dot"></span> A taste of the mayhem'; $('#arena-bottom-right').textContent = 'ONE SURVIVOR. ZERO HARD FEELINGS.*';
-  history.replaceState(null, '', location.pathname); updateConnection();
+  history.replaceState(null, '', location.pathname); tab = 'create'; updateTab(); updateConnection();
 }
 
 socket.on('connect', async () => {
@@ -224,6 +224,7 @@ const preview: RoomState = { code: '', hostId: '', phase: 'lobby', round: 0, gri
 preview.players[1].x = 9; preview.players[1].y = 7; preview.grid[7][9] = 0;
 preview.players[2].x = 9; preview.players[2].y = 1;
 preview.players[3].x = 1; preview.players[3].y = 7;
+for (const item of [...preview.players, ...preview.bombs]) preview.grid[item.y][item.x] = 0;
 function frame() { arena.draw(state ?? preview, playerId, Date.now() + serverOffset, !state); if (state) renderRoom(); requestAnimationFrame(frame); }
 requestAnimationFrame(frame);
 if (needsServer) error('The website is ready. Connect the game server using the hosting guide to enable multiplayer.');
