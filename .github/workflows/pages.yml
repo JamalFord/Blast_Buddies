@@ -12,9 +12,10 @@ concurrency:
   cancel-in-progress: true
 jobs:
   deploy:
-    # Configure this repository variable after deploying the Render server.
-    if: vars.VITE_SERVER_URL != ''
     runs-on: ubuntu-latest
+    env:
+      # Accept either Actions configuration location; the address is public in the built game.
+      VITE_SERVER_URL: ${{ vars.VITE_SERVER_URL || secrets.VITE_SERVER_URL }}
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -24,12 +25,23 @@ jobs:
         with:
           node-version: '24'
           cache: npm
+      - name: Check game server address
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          try {
+            const url = new URL(process.env.VITE_SERVER_URL?.trim());
+            if (url.protocol !== 'https:' || url.username || url.password || url.pathname !== '/' || url.search || url.hash) throw new Error();
+          } catch {
+            console.error('Set VITE_SERVER_URL under Settings > Secrets and variables > Actions (Variables or Secrets) to your Render HTTPS service URL, without /health or /socket.io, then run this workflow again.');
+            process.exit(1);
+          }
+          NODE
       - run: npm ci
       - run: npm test
       - run: npm run build:client
         env:
           VITE_BASE_PATH: /Blast_Buddies/
-          VITE_SERVER_URL: ${{ vars.VITE_SERVER_URL }}
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

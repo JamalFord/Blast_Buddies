@@ -44,12 +44,12 @@ Alternative: **New → Blueprint**, choose this repository, review `render.yaml`
 2. Choose **New repository variable**.
 3. Name: `VITE_SERVER_URL`.
 4. Value: the actual Render HTTPS URL, such as `https://your-service.onrender.com`, with no `/health` or `/socket.io` suffix.
-5. Save. This is a public server address, not a secret or password.
+5. Save. This is a public server address, not a secret or password. If you already added it as an Actions **Secret** named `VITE_SERVER_URL`, that also works; the workflow accepts either location. A Variable takes precedence when both exist.
 6. Open **Settings → Pages** and choose **GitHub Actions** as the source.
 7. Open **Actions → Deploy game to GitHub Pages → Run workflow**, select `main`, and run it.
 8. Once the run succeeds, the website should be at **https://jamalford.github.io/Blast_Buddies/**. Use the URL shown by the successful deployment as the final confirmation.
 
-The Pages job intentionally skips until `VITE_SERVER_URL` exists. Adding or changing a variable does not itself rebuild the site; run the workflow again. Future pushes to `main` automatically publish changes.
+The Pages job checks that `VITE_SERVER_URL` is a valid HTTPS service address and explains how to configure it if missing. Adding or changing a variable or secret does not itself rebuild the site; run the workflow again. Future pushes to `main` automatically publish changes.
 
 ## 3. Test before submitting
 
@@ -61,7 +61,7 @@ Submit the Pages URL once this passes. Keep your computer off for a quick check:
 
 - **Free Render wake-up:** after 15 minutes without inbound traffic, the server can sleep; waking can take about a minute. Leave the game open while its connection retries. An always-on paid instance removes this idle sleep, but payment is not necessary for the first test. Review Render's current limits before choosing a paid plan.
 - **Website loads but cannot connect:** check Render is Live, `VITE_SERVER_URL` matches its real HTTPS URL, and `CLIENT_ORIGIN` is `https://jamalford.github.io`. Then rerun the Pages workflow.
-- **Pages build skipped:** create the repository variable and manually run the workflow.
+- **Server address check fails:** add `VITE_SERVER_URL` as a repository Variable or Secret, then manually run the workflow. Use the service's root HTTPS URL.
 - **Pages deployment fails:** verify Pages source is GitHub Actions and Actions are enabled for the repository. Read the failed step's log.
 - **An invite returns 404:** share the link created by the game. It uses `/Blast_Buddies/?room=ABC123` so Pages does not need server-side routing.
 - **A room disappeared:** server redeployments/restarts clear temporary rooms. Create a new room.
