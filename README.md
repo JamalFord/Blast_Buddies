@@ -1,5 +1,5 @@
 # Blast Buddies
-
+# https://jamalford.github.io/Blast_Buddies/
 Small bombs. Big grudges. A pixel-art browser game for 2–4 friends, built for the Handshake multiplayer challenge.
 
 Create a room, share its link, and be the last buddy standing. Works with keyboard or touch controls. Original code-drawn pixel characters and tiles; no accounts or database.
