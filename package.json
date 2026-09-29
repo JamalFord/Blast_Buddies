@@ -1,0 +1,28 @@
+{
+  "name": "blast-buddies",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=22.12.0" },
+  "scripts": {
+    "dev": "concurrently -k -n server,client \"tsx watch server/index.ts\" \"vite --host 0.0.0.0\"",
+    "build": "npm run check && vite build && tsc -p tsconfig.server.json",
+    "build:client": "npm run check && vite build",
+    "start": "node dist/server/server/index.js",
+    "check": "tsc --noEmit",
+    "test": "tsx --test tests/*.test.ts"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "socket.io": "^4.8.1",
+    "socket.io-client": "^4.8.1"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.3",
+    "@types/node": "^24.0.0",
+    "concurrently": "^9.2.0",
+    "tsx": "^4.20.0",
+    "typescript": "^5.9.2",
+    "vite": "^7.1.0"
+  }
+}
