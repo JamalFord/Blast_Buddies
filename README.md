@@ -15,25 +15,6 @@ Create a room, share its link, and be the last buddy standing. Works with keyboa
 
 Players can pass through each other. Dropped bombs block movement but their owner can step off. Disconnected players remain vulnerable for a 10-second reconnection window, then forfeit. A new host is selected if the host disconnects. A disconnect during countdown cancels the start.
 
-## Run locally
-
-Use Node.js 24 LTS (22.12+ also supported).
-
-```sh
-npm ci
-npm run dev
-```
-
-Open http://localhost:5173 in two independent browser tabs, enter different nicknames, create/join a room, mark everyone ready, then start. To test a phone on the same Wi-Fi, use the network address Vite prints. Each tab owns a separate session; refreshing can restore it within 10 seconds.
-
-```sh
-npm test       # Game rules and real Socket.IO room integration tests
-npm run build # Type-check, build website, compile game server
-npm start     # Serve the production build on port 3001 (or PORT)
-```
-
-Production hosting instructions: **[DEPLOYMENT.md](DEPLOYMENT.md)**.
-
 ## Project layout
 
 - `client/` — responsive interface, Canvas renderer, sound, input, and reconnection UI.
